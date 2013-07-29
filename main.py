@@ -1,4 +1,5 @@
 import pygame
+import pygame.font
 import entities
 import tmx
 import pyglet
@@ -6,6 +7,9 @@ from kezmenu import KezMenu
 
 
 
+class PrintLocation:
+    TOP = (10, 20)
+    BOTTOM = (10, -20)
 
 class Game(object):
     # sounds
@@ -21,6 +25,8 @@ class Game(object):
         self.enemies = tmx.SpriteLayer()
         self.corns = tmx.SpriteLayer()
         self.points = 0
+        # time passed in seconds
+        self.timePassed = 0
         
         for corn in self.tilemap.layers['triggers'].find('corn'):
             entities.Corn((corn.px, corn.py), self.corns) 
@@ -28,6 +34,7 @@ class Game(object):
         
         for enemy in self.tilemap.layers['triggers'].find('enemy'):
             entities.Ghost((enemy.px + 4, enemy.py + 4), self.enemies)
+        print str(len(self.enemies))
         self.tilemap.layers.append(self.enemies)
             
         # access the triggers layer and return all player sprites (spawn points)
@@ -35,6 +42,7 @@ class Game(object):
         self.player = entities.Player((start_cell.px, start_cell.py), entities.Direction.RIGHT, self.sprites)
         self.tilemap.layers.append(self.sprites)
         
+        info = False
         while True:
             # cap at 30 frames per second, returning the time from last call
             seconds_passed = clock.tick(30) / 1000.0
@@ -48,6 +56,8 @@ class Game(object):
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_c:
                     self.player.rect = pygame.rect.Rect((32, 40), (16, 16))
                     self.player.currentDirection = entities.Direction.RIGHT
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+                    info = not info
 
             # update our sprites group
             self.tilemap.update(seconds_passed, self)
@@ -55,8 +65,25 @@ class Game(object):
             # draw sprites
             self.tilemap.draw(screen)
 
+            if (info):
+                x,y = screen.get_size()
+                # see http://stackoverflow.com/a/498103/1176596
+                self.printOnScreen(repr(self.points), map(sum,zip(PrintLocation.BOTTOM,(0, y))))
+
+
+                
+            if (self.player.lives <= 0):
+                self.printOnScreen("Dead", PrintLocation.TOP)
+            
+                
+
             # switch screen buffer and actual screen
             pygame.display.flip()
+
+    def printOnScreen(self, message, PrintLocation):
+                myfont = pygame.font.SysFont("Monospace", 15)
+                label = myfont.render(message, 1, (255,255,0))
+                screen.blit(label, PrintLocation)
         
 if __name__ == '__main__':
     # init pygame and create a screen
