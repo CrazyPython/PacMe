@@ -7,6 +7,9 @@ from kezmenu import KezMenu
 
 
 
+class PrintLocation:
+    TOP = (10, 20)
+    BOTTOM = (10, -20)
 
 class Game(object):
     # sounds
@@ -63,13 +66,24 @@ class Game(object):
             self.tilemap.draw(screen)
 
             if (info):
-                myfont = pygame.font.SysFont("Monospace", 15)
-                label = myfont.render(repr(self.points), 1, (255,255,0))
                 x,y = screen.get_size()
-                screen.blit(label, (10, y-20))
+                # see http://stackoverflow.com/a/498103/1176596
+                self.printOnScreen(repr(self.points), map(sum,zip(PrintLocation.BOTTOM,(0, y))))
+
+
                 
+            if (self.player.lives <= 0):
+                self.printOnScreen("Dead", PrintLocation.TOP)
+            
+                
+
             # switch screen buffer and actual screen
             pygame.display.flip()
+
+    def printOnScreen(self, message, PrintLocation):
+                myfont = pygame.font.SysFont("Monospace", 15)
+                label = myfont.render(message, 1, (255,255,0))
+                screen.blit(label, PrintLocation)
         
 if __name__ == '__main__':
     # init pygame and create a screen
