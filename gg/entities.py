@@ -44,16 +44,25 @@ class Ghost(pygame.sprite.Sprite):
             if self.currentDirection == Direction.RIGHT:
                 if 'r' in blockers and last.left >= cell.right and new.left < cell.right:
                     new.left = cell.right
-
-            if self.rect.colliderect(game.player.rect):
-                if self.state == GhostState.ENRAGED:
-                    game.player.loseLife()
-                if self.state == GhostState.CALM:
-                    self.respawn()
-                    game.points += 100
+                
+        if self.rect.colliderect(game.player.rect):
+            if self.state == GhostState.ENRAGED:
+                if (game.player.state == PlayerState.HURT):
+                    pass
+                    
+                elif (game.player.state == PlayerState.NORMAL):
+                    game.player.lives -= 1
+                    game.points -= 500
+                    game.player.state = PlayerState.HURT
+            if self.state == GhostState.CALM:
+                self.respawn()
+                game.points += 100
     def respawn(self):
         # gg
         pass
+
+class PlayerState:
+    NORMAL, HURT = xrange(2)
 
 class Player(pygame.sprite.Sprite):
     images = {Direction.TOP : pygame.image.load('res/images/me_top.png'),
@@ -70,6 +79,8 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[self.currentDirection]
         self.rect = pygame.rect.Rect(location, self.image.get_size())
         self.speed = 150
+        self.state = PlayerState.NORMAL
+        self.timeHurt = 0
         print str(self.rect)
         
     def center(self):
@@ -103,6 +114,9 @@ class Player(pygame.sprite.Sprite):
         
         self.currentDirection = direction
     
+    def loseLife(self):
+        self.lives -= 1
+        self.game
             
     
     def update(self, dt, game):
@@ -160,6 +174,14 @@ class Player(pygame.sprite.Sprite):
             if 'b' in blockers and last.top >= cell.bottom and new.top < cell.bottom:
                 new.top = cell.bottom
         game.tilemap.set_focus(new.x, new.y)
+        
+        
+        if (self.state == PlayerState.HURT):
+            self.timeHurt += dt
+            if (self.timeHurt > 3):
+                self.timeHurt = 0
+                self.state = PlayerState.NORMAL
+        
 
 class Corn(pygame.sprite.Sprite):
     image = pygame.image.load('res/images/corn.png')
