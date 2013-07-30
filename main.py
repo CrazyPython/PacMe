@@ -1,6 +1,6 @@
 import pygame
 import pygame.font
-import entities
+import entities, resources
 import tmx
 import pyglet
 from kezmenu import KezMenu
@@ -12,10 +12,26 @@ class PrintLocation:
     BOTTOM = (10, -20)
 
 class Game(object):
-    # sounds
-    enemydying = pyglet.resource.media('res/sounds/Jump.wav', streaming = False)
-    pickup = pyglet.resource.media('res/sounds/Powerup.wav', streaming = False)
-    levelup = pyglet.resource.media('res/sounds/levelup.wav', streaming = False)
+    def __init__(self):
+        # total points
+        self.points = 0
+        # time passed in seconds
+        self.timePassed = 0
+        # sound cache
+        self.sounds = resources.PygletSoundCache()
+        # list of available sounds
+        print "Loading ..."
+        self.enemydying = 'res/sounds/Jump.wav'
+        self.pickup = 'res/sounds/Powerup.wav'
+        self.levelup = 'res/sounds/levelup.wav'
+        
+        # cache
+        self.sounds[self.enemydying]
+        self.sounds[self.pickup]
+        self.sounds[self.levelup]
+        print "Loaded"
+        # TODO: make those paths configurable
+    
     def main(self, screen):
         # new clock
         clock = pygame.time.Clock()
@@ -24,9 +40,7 @@ class Game(object):
         self.sprites = tmx.SpriteLayer()
         self.enemies = tmx.SpriteLayer()
         self.corns = tmx.SpriteLayer()
-        self.points = 0
-        # time passed in seconds
-        self.timePassed = 0
+        
         
         for corn in self.tilemap.layers['triggers'].find('corn'):
             entities.Corn((corn.px, corn.py), self.corns) 
@@ -50,6 +64,8 @@ class Game(object):
             # don't miss closing events!
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    # TODO: find out the cause of "AL lib: ReleaseALC: 1 device not closed" 
+                    
                     return
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     return
@@ -70,16 +86,13 @@ class Game(object):
                 # see http://stackoverflow.com/a/498103/1176596
                 self.printOnScreen(repr(self.points), map(sum,zip(PrintLocation.BOTTOM,(0, y))))
 
-
                 
             if (self.player.lives <= 0):
                 self.printOnScreen("Dead", PrintLocation.TOP)
             
-                
-
             # switch screen buffer and actual screen
             pygame.display.flip()
-
+        
     def printOnScreen(self, message, PrintLocation):
                 myfont = pygame.font.SysFont("Monospace", 15)
                 label = myfont.render(message, 1, (255,255,0))
