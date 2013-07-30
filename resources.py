@@ -2,11 +2,14 @@ class Cache(dict):
     '''
     A class used for caching queries. Nothing fancy, no expiration etc as this is a small game
     '''
-    def __init__(self):
+    def __init__(self, fn):
         '''
-        Nothing here to see other than intialisation...
+        Initialisation.
+        
+        @param fn: A function or function pointer that will be used on cache misses 
         '''
         dict.__init__(self)
+        self.__fn = fn
 
     def __getitem__(self, item):
         '''
