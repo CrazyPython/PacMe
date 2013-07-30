@@ -19,8 +19,7 @@ Credit goes to: Zabin, Daneeklu, Jetrel, Hyptosis, Redshrike, Bertram from openg
 
 ####Richard Jones' talk at US PyCon 2012
 
-It has inspired me to fiddle around with pygame and it also covers many useful tools, so [check it out!](
-http://pyvideo.org/video/1718/introduction-to-pygame)
+It has inspired me to fiddle around with pygame and it also covers many useful tools, so check out [the video](http://pyvideo.org/video/1718/introduction-to-pygame) and [the related repository](https://bitbucket.org/r1chardj0n3s/pygame-tutorial).
 
 ###Tools and languages
 
