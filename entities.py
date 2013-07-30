@@ -193,5 +193,5 @@ class Corn(pygame.sprite.Sprite):
     def update(self, dt, game):
         if self.rect.colliderect(game.player.rect):
             game.points += 5
-            game.pickup.play()
+            game.sounds[game.pickup].play()
             self.kill()

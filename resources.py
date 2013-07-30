@@ -1,15 +1,13 @@
-class Cache(dict):
-    '''
-    A class used for caching queries. Nothing fancy, no expiration etc as this is a small game
-    '''
-    def __init__(self, fn):
+import pyglet
+        
+class PygletSoundCache(dict):
+    def __init__(self):
         '''
         Initialisation.
         
         @param fn: A function or function pointer that will be used on cache misses 
         '''
         dict.__init__(self)
-        self.__fn = fn
 
     def __getitem__(self, item):
         '''
@@ -18,5 +16,7 @@ class Cache(dict):
         if item in self:
             return dict.__getitem__(self, item)
         else:
-            dict.__setitem__(self, item, self.__fn(item))
+            dict.__setitem__(self, item, pyglet.resource.media(item, streaming = False))
             return dict.__getitem__(self, item)
+
+    
