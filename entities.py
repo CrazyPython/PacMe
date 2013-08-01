@@ -51,6 +51,7 @@ class Ghost(pygame.sprite.Sprite):
                     pass
                     
                 elif (game.player.state == PlayerState.NORMAL):
+                    game.sounds[game.enemydying].play()
                     game.player.lives -= 1
                     game.points -= 500
                     game.player.state = PlayerState.HURT

@@ -1,7 +1,15 @@
+import pyglet
+
+
+
 def test():
     pass
 
 if __name__ == '__main__':
-    x = 1
+    player = pyglet.media.Player()
+    music = pyglet.resource.media('res/sounds/Jump.wav', streaming = True)
+    player.queue(music)
+    player.eos_action = player.EOS_LOOP
+    player.play()
     while True:
-        x += (x-2)*(x-2)
+        pass
