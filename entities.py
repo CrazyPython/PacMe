@@ -1,12 +1,14 @@
 import pygame
 import tmx
+import random
 
 class Direction:
-    TOP, RIGHT, BOTTOM, LEFT = xrange(4)
-    DirectionVector = {TOP : (-1, 0),
-                       RIGHT : (0, 1),
-                       BOTTOM : (1, 0),
-                       LEFT : (0, -1)}
+    NORTH, EAST, SOUTH, WEST = xrange(4)
+    directions = [NORTH, EAST, SOUTH, WEST]
+    DirectionVector = {NORTH : (-1, 0),
+                       EAST : (0, 1),
+                       SOUTH : (1, 0),
+                       WEST : (0, -1)}
 
 class GhostState:
     ENRAGED, CALM = xrange(2)
@@ -19,31 +21,66 @@ class Ghost(pygame.sprite.Sprite):
         self.spawn = location
         self.rect = pygame.rect.Rect(location, self.image.get_size())
         self.state = GhostState.ENRAGED
-        self.currentDirection = Direction.LEFT
+        self.currentDirection = Direction.WEST
+        self.speed = 150
 
     def update(self, dt, game):
         last = self.rect
         new = self.rect.move(Direction.DirectionVector[self.currentDirection])
 
-        for cell in game.tilemap.layers['triggers'].collide(new, 'blockers'):
+        for cell in game.tilemap.layers['free'].collide(last, 'free'):
+            direction = -1
+            possible = []
+            hallway = cell['free'] 
+            if 't' in hallway:
+                possible.append(Direction.NORTH)
+            if 'b' in hallway:
+                possible.append(Direction.SOUTH)
+            if 'l' in hallway:
+                possible.append(Direction.WEST)
+            if 'r' in hallway:
+                possible.append(Direction.EAST)
+                
+            while not direction in possible:
+                direction = random.randint(0,3)
+                
+        self.currentDirection = direction 
+            
+
+        if self.currentDirection == Direction.WEST:
+            self.rect.x -= self.speed * dt
+        if self.currentDirection == Direction.EAST:
+            self.rect.x += self.speed * dt
+        if self.currentDirection == Direction.NORTH:
+            self.rect.y -= self.speed * dt
+        if self.currentDirection == Direction.SOUTH:
+            self.rect.y += self.speed * dt
+            
+
+        # conforming collision (push the player bang even to the wall)
+        if self.currentDirection == Direction.NORTH or self.currentDirection == Direction.SOUTH:
+            pass
+        if self.currentDirection == Direction.WEST or self.currentDirection == Direction.EAST:
+            pass
+        test = self.rect.inflate(-2., -2.)
+        new = self.rect
+        
+        for cell in game.tilemap.layers['triggers'].collide(test, 'blockers'):
             # find the actual value of the blockers property
             blockers = cell['blockers']
             # now for each side set in the blocker check for collision; only
             # collide if we transition through the blocker side (to avoid
             # false-positives) and align the player with the side collided to
             # make things neater
-            if self.currentDirection == Direction.TOP:
-                if 't' in blockers and last.bottom <= cell.top and new.bottom > cell.top:
-                    new.bottom = cell.top
-            if self.currentDirection == Direction.LEFT:
-                if 'l' in blockers and last.right <= cell.left and new.right > cell.left:
-                    new.right = cell.left
-            if self.currentDirection == Direction.BOTTOM:
-                if 'b' in blockers and last.top >= cell.bottom and new.top < cell.bottom:
-                    new.top = cell.bottom
-            if self.currentDirection == Direction.RIGHT:
-                if 'r' in blockers and last.left >= cell.right and new.left < cell.right:
-                    new.left = cell.right
+
+            if 'l' in blockers and last.right <= cell.left and new.right > cell.left:
+                new.right = cell.left
+            if 'r' in blockers and last.left >= cell.right and new.left < cell.right:
+                new.left = cell.right
+            if 't' in blockers and last.bottom <= cell.top and new.bottom > cell.top:
+                new.bottom = cell.top
+            if 'b' in blockers and last.top >= cell.bottom and new.top < cell.bottom:
+                new.top = cell.bottom
                 
         if self.rect.colliderect(game.player.rect):
             if self.state == GhostState.ENRAGED:
@@ -66,10 +103,10 @@ class PlayerState:
     NORMAL, HURT = xrange(2)
 
 class Player(pygame.sprite.Sprite):
-    images = {Direction.TOP : pygame.image.load('res/images/me_top.png'),
-              Direction.RIGHT : pygame.image.load('res/images/me_right.png'),
-              Direction.BOTTOM : pygame.image.load('res/images/me_bottom.png'),
-              Direction.LEFT : pygame.image.load('res/images/me_left.png')}
+    images = {Direction.NORTH : pygame.image.load('res/images/me_top.png'),
+              Direction.EAST : pygame.image.load('res/images/me_right.png'),
+              Direction.SOUTH : pygame.image.load('res/images/me_bottom.png'),
+              Direction.WEST : pygame.image.load('res/images/me_left.png')}
 
     def __init__(self, location, direction, *groups):
         super(Player, self).__init__(*groups)
@@ -93,7 +130,7 @@ class Player(pygame.sprite.Sprite):
         direction = self.nextDirection
         for blocker in game.tilemap.layers['triggers'].collide(self.rect, 'blockers'):
             print "blocker: " + str(blocker)
-            if self.nextDirection == Direction.LEFT or self.nextDirection == Direction.RIGHT:
+            if self.nextDirection == Direction.WEST or self.nextDirection == Direction.EAST:
                 
                 if blocker.top + 1 < self.rect.bottom:
                     print "A"
@@ -103,7 +140,7 @@ class Player(pygame.sprite.Sprite):
                     print "B"
                     direction = self.currentDirection
                     break
-            if self.nextDirection == Direction.TOP or self.nextDirection == Direction.BOTTOM:
+            if self.nextDirection == Direction.NORTH or self.nextDirection == Direction.SOUTH:
                 if blocker.left + 1 < self.rect.right:
                     print "C"
                     direction = self.currentDirection
@@ -127,33 +164,33 @@ class Player(pygame.sprite.Sprite):
         
         
         if key[pygame.K_LEFT] and not key[pygame.K_RIGHT]:
-                self.nextDirection = Direction.LEFT
+                self.nextDirection = Direction.WEST
         if key[pygame.K_RIGHT] and not key[pygame.K_LEFT]:
-            self.nextDirection = Direction.RIGHT
+            self.nextDirection = Direction.EAST
         if key[pygame.K_UP] and not key[pygame.K_DOWN]:
-            self.nextDirection = Direction.TOP
+            self.nextDirection = Direction.NORTH
         if key[pygame.K_DOWN] and not key[pygame.K_UP]:
-            self.nextDirection = Direction.BOTTOM
+            self.nextDirection = Direction.SOUTH
         
         self.currentDirection = self.nextDirection
         # self.findDirection(game)
             
             
-        if self.currentDirection == Direction.LEFT:
+        if self.currentDirection == Direction.WEST:
             self.rect.x -= self.speed * dt
-        if self.currentDirection == Direction.RIGHT:
+        if self.currentDirection == Direction.EAST:
             self.rect.x += self.speed * dt
-        if self.currentDirection == Direction.TOP:
+        if self.currentDirection == Direction.NORTH:
             self.rect.y -= self.speed * dt
-        if self.currentDirection == Direction.BOTTOM:
+        if self.currentDirection == Direction.SOUTH:
             self.rect.y += self.speed * dt
             
         self.image = self.images[self.currentDirection]
 
         # conforming collision (push the player bang even to the wall)
-        if self.currentDirection == Direction.TOP or self.currentDirection == Direction.BOTTOM:
+        if self.currentDirection == Direction.NORTH or self.currentDirection == Direction.SOUTH:
             pass
-        if self.currentDirection == Direction.LEFT or self.currentDirection == Direction.RIGHT:
+        if self.currentDirection == Direction.WEST or self.currentDirection == Direction.EAST:
             pass
         test = self.rect.inflate(-2., -2.)
         new = self.rect

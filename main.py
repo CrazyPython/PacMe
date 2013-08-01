@@ -53,7 +53,7 @@ class Game(object):
             
         # access the triggers layer and return all player sprites (spawn points)
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
-        self.player = entities.Player((start_cell.px, start_cell.py), entities.Direction.RIGHT, self.sprites)
+        self.player = entities.Player((start_cell.px, start_cell.py), entities.Direction.EAST, self.sprites)
         self.tilemap.layers.append(self.sprites)
         
         info = False
