@@ -47,7 +47,7 @@ class Game(object):
         self.tilemap.layers.append(self.corns)
         
         for enemy in self.tilemap.layers['triggers'].find('enemy'):
-            entities.Ghost((enemy.px + 4, enemy.py + 4), self.enemies)
+            entities.Ghost((enemy.px + 4, enemy.py + 4), entities.Direction.WEST, self.enemies)
         print str(len(self.enemies))
         self.tilemap.layers.append(self.enemies)
             
@@ -94,9 +94,9 @@ class Game(object):
             pygame.display.flip()
         
     def printOnScreen(self, message, PrintLocation):
-                myfont = pygame.font.SysFont("Monospace", 15)
-                label = myfont.render(message, 1, (255,255,0))
-                screen.blit(label, PrintLocation)
+        myfont = pygame.font.SysFont("Monospace", 15)
+        label = myfont.render(message, 1, (255,255,0))
+        screen.blit(label, PrintLocation)
         
 if __name__ == '__main__':
     # init pygame and create a screen
