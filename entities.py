@@ -1,7 +1,9 @@
 import pygame
 import tmx
 import random
-
+def random_image():
+    images = ["ghost_blue.jpg","ghost_pink.jpg","ghost_orange.jpg","ghost_red"]
+    return random.choice(images)
 class Direction:
     NORTH, EAST, SOUTH, WEST = xrange(4)
     directions = [NORTH, EAST, SOUTH, WEST]
@@ -17,7 +19,6 @@ class GhostState:
     ENRAGED, CALM = xrange(2)
 
 class Ghost(pygame.sprite.Sprite):
-    image = pygame.image.load('res/images/enemy_big.png')
 
     def __init__(self, location, *groups):
         super(Ghost, self).__init__(*groups)
@@ -26,7 +27,7 @@ class Ghost(pygame.sprite.Sprite):
         self.state = GhostState.ENRAGED
         self.currentDirection = Direction.WEST
         self.speed = 150
-
+        self.image = pygame.image.load(random_image())
     def update(self, dt, game):
         last = self.rect
         new = self.rect.move(Direction.DirectionVector[self.currentDirection])
