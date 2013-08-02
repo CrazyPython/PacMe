@@ -20,6 +20,7 @@ Credit goes to: Zabin, Daneeklu, Jetrel, Hyptosis, Redshrike, Bertram from openg
 ####Richard Jones' talk at US PyCon 2012
 
 It has inspired me to fiddle around with pygame and it also covers many useful tools, so check out [the video](http://pyvideo.org/video/1718/introduction-to-pygame) and [the related repository](https://bitbucket.org/r1chardj0n3s/pygame-tutorial).
+The tmx.py also comes from him enabling me to play around with Tiled-created map!
 
 ###Tools and languages
 
@@ -32,7 +33,7 @@ It has inspired me to fiddle around with pygame and it also covers many useful t
 
 ###ToDo
 
-- [ ] keep a ToDo-List :)
-- [ ] think about structure
+- [x] keep a ToDo-List :)
+- [ ] think about structure (this one's huge - I already feel bad for such a hacked code :P)
 - [ ] split this file into several files
 - [ ] etc
