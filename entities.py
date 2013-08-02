@@ -9,6 +9,9 @@ class Direction:
                        EAST : (0, 1),
                        SOUTH : (1, 0),
                        WEST : (0, -1)}
+    @staticmethod
+    def getReverse(direction):
+        return direction+2 % len(Direction.directions)
 
 class GhostState:
     ENRAGED, CALM = xrange(2)
@@ -28,23 +31,35 @@ class Ghost(pygame.sprite.Sprite):
         last = self.rect
         new = self.rect.move(Direction.DirectionVector[self.currentDirection])
 
-        for cell in game.tilemap.layers['free'].collide(last, 'free'):
-            direction = -1
-            possible = []
-            hallway = cell['free'] 
-            if 't' in hallway:
-                possible.append(Direction.NORTH)
-            if 'b' in hallway:
-                possible.append(Direction.SOUTH)
-            if 'l' in hallway:
-                possible.append(Direction.WEST)
-            if 'r' in hallway:
-                possible.append(Direction.EAST)
+        
+        if len(game.tilemap.layers['free'].collide(last, 'free')) == 1:
+            for cell in game.tilemap.layers['free'].collide(last, 'free'):
+                direction = -1
+                possible = []
+                hallway = cell['free'] 
+                if 't' in hallway:
+                    possible.append(Direction.NORTH)
+                if 'b' in hallway:
+                    possible.append(Direction.SOUTH)
+                if 'l' in hallway:
+                    possible.append(Direction.WEST)
+                if 'r' in hallway:
+                    possible.append(Direction.EAST)
                 
-            while not direction in possible:
-                direction = random.randint(0,3)
+                if self.currentDirection in possible:
+                    if random.randint(0,10/len(possible)) == 0:
+                        while not direction in possible:
+                            direction = random.randint(0,3)
+                    else:
+                        direction = self.currentDirection
+                else:
+                    while not direction in possible:
+                        direction = random.randint(0,3)
                 
-        self.currentDirection = direction 
+                if direction == Direction.getReverse(self.currentDirection):
+                    if random.randint(0,1) == 0:
+                        direction = self.currentDirection
+                self.currentDirection = direction 
             
 
         if self.currentDirection == Direction.WEST:
