@@ -64,38 +64,39 @@ class GhostState:
     ENRAGED, CALM = xrange(2)
 
 class GhostColor:
-	PINK, GREEN, BLUE, RED = xrange(4)
+    PINK, GREEN, BLUE, RED = xrange(4)
+    ghostColors = [PINK, GREEN, BLUE, RED]
 
 class Ghost(MovingSprite):
-	pink_images = {Direction.NORTH : pygame.image.load('res/images/monster_pink.png'),
+    pink_images = {Direction.NORTH : pygame.image.load('res/images/monster_pink.png'),
               Direction.EAST : pygame.image.load('res/images/monster_pink.png'),
               Direction.SOUTH : pygame.image.load('res/images/monster_pink.png'),
               Direction.WEST : pygame.image.load('res/images/monster_pink.png')}
-	
-	green_images = {Direction.NORTH : pygame.image.load('res/images/monster_green.png'),
+
+    green_images = {Direction.NORTH : pygame.image.load('res/images/monster_green.png'),
               Direction.EAST : pygame.image.load('res/images/monster_green.png'),
               Direction.SOUTH : pygame.image.load('res/images/monster_green.png'),
               Direction.WEST : pygame.image.load('res/images/monster_green.png')}
 
-	blue_images = {Direction.NORTH : pygame.image.load('res/images/monster_blue.png'),
+    blue_images = {Direction.NORTH : pygame.image.load('res/images/monster_blue.png'),
               Direction.EAST : pygame.image.load('res/images/monster_blue.png'),
               Direction.SOUTH : pygame.image.load('res/images/monster_blue.png'),
               Direction.WEST : pygame.image.load('res/images/monster_blue.png')}
-	
-	red_images = {Direction.NORTH : pygame.image.load('res/images/monster_red.png'),
+
+    red_images = {Direction.NORTH : pygame.image.load('res/images/monster_red.png'),
               Direction.EAST : pygame.image.load('res/images/monster_red.png'),
               Direction.SOUTH : pygame.image.load('res/images/monster_red.png'),
               Direction.WEST : pygame.image.load('res/images/monster_red.png')}
 
-	images = {GhostColor.PINK: pink_images,
+    images = {GhostColor.PINK: pink_images,
              GhostColor.GREEN: green_images ,
              GhostColor.BLUE: blue_images ,
-             GhostColors.RED: red_images}
+             GhostColor.RED: red_images}
 
-	def __init__(self, location, direction, color, *groups):
+    def __init__(self, location, direction, color, *groups):
         super(Ghost, self).__init__(self.images[color][direction], location, direction, 150, *groups)
         self.state = GhostState.ENRAGED
-		self.color = color
+        self.color = color
 
     def update(self, dt, game):
         lastRect = self.rect
@@ -121,7 +122,7 @@ class Ghost(MovingSprite):
                             direction = random.randint(0,3)
                     else:
                         direction = self.currentDirection
-                else:random
+                else:
                     while not direction in possible:
                         direction = random.randint(0,3)
                 
