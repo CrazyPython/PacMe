@@ -1788,7 +1788,22 @@
     <property name="blockers" value="lr"/>
    </properties>
   </object>
-  <object name="enemy" x="480" y="32" width="32" height="32">
+  <object name="enemy" x="32" y="32" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="576" y="576" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="32" y="576" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="224" y="576" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>

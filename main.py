@@ -46,8 +46,10 @@ class Game(object):
             entities.Corn((corn.px, corn.py), self.corns) 
         self.tilemap.layers.append(self.corns)
         
+        color = 0
         for enemy in self.tilemap.layers['triggers'].find('enemy'):
-            entities.Ghost((enemy.px + 4, enemy.py + 4), entities.Direction.WEST, self.enemies)
+            entities.Ghost((enemy.px + 4, enemy.py + 4), entities.Direction.WEST, color, self.enemies)
+            color = color + 1 % len(entities.GhostColor.ghostColors)
         print str(len(self.enemies))
         self.tilemap.layers.append(self.enemies)
             
