@@ -63,15 +63,39 @@ class MovingSprite(pygame.sprite.Sprite):
 class GhostState:
     ENRAGED, CALM = xrange(2)
 
-class Ghost(MovingSprite):
-    images = {Direction.NORTH : pygame.image.load('res/images/enemy_big.png'),
-              Direction.EAST : pygame.image.load('res/images/enemy_big.png'),
-              Direction.SOUTH : pygame.image.load('res/images/enemy_big.png'),
-              Direction.WEST : pygame.image.load('res/images/enemy_big.png')}
+class GhostColor:
+	PINK, GREEN, BLUE, RED = xrange(4)
 
-    def __init__(self, location, direction, *groups):
-        super(Ghost, self).__init__(self.images[direction], location, direction, 150, *groups)
+class Ghost(MovingSprite):
+	pink_images = {Direction.NORTH : pygame.image.load('res/images/monster_pink.png'),
+              Direction.EAST : pygame.image.load('res/images/monster_pink.png'),
+              Direction.SOUTH : pygame.image.load('res/images/monster_pink.png'),
+              Direction.WEST : pygame.image.load('res/images/monster_pink.png')}
+	
+	green_images = {Direction.NORTH : pygame.image.load('res/images/monster_green.png'),
+              Direction.EAST : pygame.image.load('res/images/monster_green.png'),
+              Direction.SOUTH : pygame.image.load('res/images/monster_green.png'),
+              Direction.WEST : pygame.image.load('res/images/monster_green.png')}
+
+	blue_images = {Direction.NORTH : pygame.image.load('res/images/monster_blue.png'),
+              Direction.EAST : pygame.image.load('res/images/monster_blue.png'),
+              Direction.SOUTH : pygame.image.load('res/images/monster_blue.png'),
+              Direction.WEST : pygame.image.load('res/images/monster_blue.png')}
+	
+	red_images = {Direction.NORTH : pygame.image.load('res/images/monster_red.png'),
+              Direction.EAST : pygame.image.load('res/images/monster_red.png'),
+              Direction.SOUTH : pygame.image.load('res/images/monster_red.png'),
+              Direction.WEST : pygame.image.load('res/images/monster_red.png')}
+
+	images = {GhostColor.PINK: pink_images,
+             GhostColor.GREEN: green_images ,
+             GhostColor.BLUE: blue_images ,
+             GhostColors.RED: red_images}
+
+	def __init__(self, location, direction, color, *groups):
+        super(Ghost, self).__init__(self.images[color][direction], location, direction, 150, *groups)
         self.state = GhostState.ENRAGED
+		self.color = color
 
     def update(self, dt, game):
         lastRect = self.rect
@@ -97,7 +121,7 @@ class Ghost(MovingSprite):
                             direction = random.randint(0,3)
                     else:
                         direction = self.currentDirection
-                else:
+                else:random
                     while not direction in possible:
                         direction = random.randint(0,3)
                 
@@ -108,7 +132,7 @@ class Ghost(MovingSprite):
         # movement AI END
         
         # update image    
-        self.image = self.images[self.currentDirection]
+        self.image = self.images[self.color][self.currentDirection]
         
         # execute movement and enforce conforming collision
         self.finalMoveWithConformingCollision(dt, game)
