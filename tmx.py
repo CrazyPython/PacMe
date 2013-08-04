@@ -43,8 +43,9 @@ class Tile(object):
             value = c.attrib['value']
 
             # TODO hax
+            # changed by mcwise: properties consisting of digits will be interpreted as a string now
             if value.isdigit():
-                value = int(value)
+                value = str(value)
             self.properties[name] = value
 
     def __repr__(self):
@@ -473,8 +474,9 @@ visible: Whether the object is shown (1) or hidden (0). Defaults to 1.
             value = c.attrib['value']
 
             # TODO hax
+            # changed by mcwise: properties consisting of digits will be interpreted as a string now            
             if value.isdigit():
-                value = int(value)
+                value = str(value)
             o.properties[name] = value
         return o
 
@@ -531,8 +533,9 @@ class ObjectLayer(object):
             value = c.attrib['value']
 
             # TODO hax
+            # changed by mcwise: properties consisting of digits will be interpreted as a string now            
             if value.isdigit():
-                value = int(value)
+                value = str(value)
             layer.properties[name] = value
         return layer
 
