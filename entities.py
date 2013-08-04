@@ -94,7 +94,7 @@ class Ghost(MovingSprite):
              GhostColor.RED: red_images}
 
     def __init__(self, location, direction, color, *groups):
-        super(Ghost, self).__init__(self.images[color][direction], location, direction, 150, *groups)
+        super(Ghost, self).__init__(self.images[color][direction], location, direction, 130, *groups)
         self.state = GhostState.ENRAGED
         self.color = color
 
@@ -167,7 +167,7 @@ class Player(MovingSprite):
               Direction.WEST : pygame.image.load('res/images/me_left.png')}
 
     def __init__(self, location, direction, *groups):
-        super(Player, self).__init__(self.images[direction], location, direction, 150, *groups)
+        super(Player, self).__init__(self.images[direction], location, direction, 130, *groups)
         self.lives = 3
         self.state = PlayerState.NORMAL
         self.timeHurt = 0

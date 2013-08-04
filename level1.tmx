@@ -875,6 +875,7 @@
   </object>
   <object name="player" x="576" y="32" width="32" height="32">
    <properties>
+    <property name="direction" value="lb"/>
     <property name="player" value=""/>
    </properties>
   </object>
@@ -1790,26 +1791,34 @@
   </object>
   <object name="enemy" x="32" y="32" width="32" height="32">
    <properties>
+    <property name="color" value="0123"/>
+    <property name="direction" value="rt"/>
     <property name="enemy" value=""/>
    </properties>
   </object>
   <object name="enemy" x="576" y="576" width="32" height="32">
    <properties>
+    <property name="color" value="3"/>
+    <property name="direction" value="tl"/>
     <property name="enemy" value=""/>
    </properties>
   </object>
   <object name="enemy" x="32" y="576" width="32" height="32">
    <properties>
+    <property name="color" value="1"/>
+    <property name="direction" value="tr"/>
     <property name="enemy" value=""/>
    </properties>
   </object>
   <object name="enemy" x="224" y="576" width="32" height="32">
    <properties>
+    <property name="color" value="2"/>
+    <property name="direction" value="lrt"/>
     <property name="enemy" value=""/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="free" width="20" height="20">
+ <objectgroup name="free" width="20" height="20" visible="0">
   <object name="free" x="64" y="32" width="32" height="32">
    <properties>
     <property name="free" value="lr"/>

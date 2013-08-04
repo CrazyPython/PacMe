@@ -3,6 +3,7 @@ import pygame.font
 import entities, resources
 import tmx
 import pyglet
+import random
 from kezmenu import KezMenu
 
 
@@ -46,11 +47,23 @@ class Game(object):
             entities.Corn((corn.px, corn.py), self.corns) 
         self.tilemap.layers.append(self.corns)
         
-        color = 0
+        color = entities.GhostColor.PINK
+        direction = entities.Direction.WEST
         for enemy in self.tilemap.layers['triggers'].find('enemy'):
-            entities.Ghost((enemy.px + 4, enemy.py + 4), entities.Direction.WEST, color, self.enemies)
-            color = color + 1 % len(entities.GhostColor.ghostColors)
-        print str(len(self.enemies))
+            # randomly choose a color and direction from the given possibilities
+            if (len(enemy['color']) >= 1):
+                rand = random.randint(0, len(enemy['color']) - 1)
+                color = entities.GhostColor.ghostColors[int(enemy['color'][rand])]
+            else:
+                color = entities.GhostColor.PINK
+                
+            if (len(enemy['direction'])> 0):
+                rand = random.randint(0, len(enemy['direction']))
+                direction = entities.Direction.directions[rand]
+            else:
+                direction = entities.Direction.WEST
+            entities.Ghost((enemy.px + 4, enemy.py + 4), direction, color, self.enemies)
+        
         self.tilemap.layers.append(self.enemies)
             
         # access the triggers layer and return all player sprites (spawn points)
