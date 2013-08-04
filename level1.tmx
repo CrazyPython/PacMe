@@ -1818,7 +1818,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="free" width="20" height="20" visible="0">
+ <objectgroup name="free" width="20" height="20">
   <object name="free" x="64" y="32" width="32" height="32">
    <properties>
     <property name="free" value="lr"/>
