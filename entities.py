@@ -13,6 +13,20 @@ class Direction:
     @staticmethod
     def getReverse(direction):
         return direction+2 % len(Direction.directions)
+    
+    @staticmethod
+    def charToDirection(char):
+        if (char == 't' or char == 'n'):
+            return Direction.NORTH
+        if (char == 'r' or char == 'e'):
+            return Direction.EAST
+        if (char == 'b' or char == 's'):
+            return Direction.SOUTH
+        if (char == 'l' or char == 'w'):
+            return Direction.WEST
+        else:
+            raise Exception, "Invalid direction"
+        
 
 class MovingSprite(pygame.sprite.Sprite):
     

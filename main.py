@@ -57,9 +57,9 @@ class Game(object):
             else:
                 color = entities.GhostColor.PINK
                 
-            if (len(enemy['direction'])> 0):
-                rand = random.randint(0, len(enemy['direction']))
-                direction = entities.Direction.directions[rand]
+            if (len(enemy['direction'])>= 1):
+                rand = random.randint(0, len(enemy['direction']) - 1)
+                direction = entities.Direction.charToDirection(enemy['direction'][rand])
             else:
                 direction = entities.Direction.WEST
             entities.Ghost((enemy.px + 4, enemy.py + 4), direction, color, self.enemies)
