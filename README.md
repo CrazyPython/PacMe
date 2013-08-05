@@ -22,13 +22,19 @@ Credit goes to: Zabin, Daneeklu, Jetrel, Hyptosis, Redshrike, Bertram from openg
 It has inspired me to fiddle around with pygame and it also covers many useful tools, so check out [the video](http://pyvideo.org/video/1718/introduction-to-pygame) and [the related repository](https://bitbucket.org/r1chardj0n3s/pygame-tutorial).
 The tmx.py also comes from him enabling me to play around with Tiled-created map!
 
+####Libraries
+
+* [Pygame](http://www.pygame.org/news.html)
+* [pyglet](http://www.pyglet.org/)
+* [KezMenu](https://pypi.python.org/pypi/KezMenu/) (not yet used)
+* tmx-library by Richard Jones ([see above](https://github.com/mcwise/PacMe#richard-jones-talk-at-us-pycon-2012))
+* 
 ###Tools and languages
 
-* I use Python and code mainly in Eclipse Py.
+* I use Python 2.7 and code mainly in Eclipse Py.
 * [Tiled](http://www.mapeditor.org/) - to create the tilemaps
 * [sfrx](http://www.drpetter.se/project_sfx.html) - to create sound effects
 * [GIMP](http://www.gimp.org/) - to create custom images
-
 
 
 ###ToDo
