@@ -37,7 +37,7 @@ class Game(object):
         # new clock
         clock = pygame.time.Clock()
         # tmx magic
-        self.tilemap = tmx.load('level1.tmx', screen.get_size())
+        self.tilemap = tmx.load('res/map/level1.tmx', screen.get_size())
         self.sprites = tmx.SpriteLayer()
         self.enemies = tmx.SpriteLayer()
         self.corns = tmx.SpriteLayer()
