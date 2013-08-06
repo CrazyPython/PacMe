@@ -185,7 +185,6 @@ class Player(MovingSprite):
         self.lives = 3
         self.state = PlayerState.NORMAL
         self.timeHurt = 0
-        print str(self.rect)
         
     def center(self):
         # currently not used
