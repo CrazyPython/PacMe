@@ -44,7 +44,7 @@ class Game(object):
         
         
         for corn in self.tilemap.layers['triggers'].find('corn'):
-            entities.Corn((corn.px, corn.py), self.corns) 
+            entities.Corn(self, (corn.px, corn.py), self.corns) 
         self.tilemap.layers.append(self.corns)
         
         color = entities.GhostColor.PINK
@@ -62,13 +62,13 @@ class Game(object):
                 direction = entities.Direction.charToDirection(enemy['direction'][rand])
             else:
                 direction = entities.Direction.WEST
-            entities.Ghost((enemy.px + 4, enemy.py + 4), direction, color, self.enemies)
+            entities.Ghost(self, (enemy.px + 4, enemy.py + 4), direction, color, self.enemies)
         
         self.tilemap.layers.append(self.enemies)
             
         # access the triggers layer and return all player sprites (spawn points)
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
-        self.player = entities.Player((start_cell.px, start_cell.py), entities.Direction.EAST, self.sprites)
+        self.player = entities.Player(self, (start_cell.px, start_cell.py), entities.Direction.EAST, self.sprites)
         self.tilemap.layers.append(self.sprites)
         
         info = False
@@ -91,7 +91,7 @@ class Game(object):
                     info = not info
 
             # update our sprites group
-            self.tilemap.update(seconds_passed, self)
+            self.tilemap.update(seconds_passed)
 
             # draw sprites
             self.tilemap.draw(screen)

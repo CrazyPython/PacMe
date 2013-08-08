@@ -30,15 +30,16 @@ class Direction:
 
 class MovingSprite(pygame.sprite.Sprite):
     
-    def __init__(self, image, location, direction, speed, *groups):
+    def __init__(self, game, image, location, direction, speed, *groups):
         super(MovingSprite, self).__init__(*groups)
+        self.game = game
         self.spawn = location
         self.currentDirection = direction
         self.rect = pygame.rect.Rect(location, image.get_size())
         self.speed = speed
         self.image = image
         
-    def finalMoveWithConformingCollision(self, dt, game):
+    def finalMoveWithConformingCollision(self, dt):
         lastRect = self.rect.copy()
         
         if self.currentDirection == Direction.WEST:
@@ -55,7 +56,7 @@ class MovingSprite(pygame.sprite.Sprite):
         inflated = self.rect.inflate(-2., -2.)
         newRect = self.rect
         
-        for cell in game.tilemap.layers['triggers'].collide(inflated, 'blockers'):
+        for cell in self.game.tilemap.layers['triggers'].collide(inflated, 'blockers'):
             # find the actual value of the blockers property
             blockers = cell['blockers']
             # now for each side set in the blocker check for collision; only
@@ -107,17 +108,17 @@ class Ghost(MovingSprite):
              GhostColor.BLUE: blue_images ,
              GhostColor.RED: red_images}
 
-    def __init__(self, location, direction, color, *groups):
-        super(Ghost, self).__init__(self.images[color][direction], location, direction, 130, *groups)
+    def __init__(self, game, location, direction, color, *groups):
+        super(Ghost, self).__init__(game, self.images[color][direction], location, direction, 130, *groups)
         self.state = GhostState.ENRAGED
         self.color = color
 
-    def update(self, dt, game):
+    def update(self, dt):
         lastRect = self.rect
         
         # movement AI
-        if len(game.tilemap.layers['free'].collide(lastRect, 'free')) == 1:
-            for cell in game.tilemap.layers['free'].collide(lastRect, 'free'):
+        if len(self.game.tilemap.layers['free'].collide(lastRect, 'free')) == 1:
+            for cell in self.game.tilemap.layers['free'].collide(lastRect, 'free'):
                 direction = -1
                 possible = []
                 hallway = cell['free'] 
@@ -150,22 +151,22 @@ class Ghost(MovingSprite):
         self.image = self.images[self.color][self.currentDirection]
         
         # execute movement and enforce conforming collision
-        self.finalMoveWithConformingCollision(dt, game)
+        self.finalMoveWithConformingCollision(dt)
         
         # player collision
-        if self.rect.colliderect(game.player.rect):
+        if self.rect.colliderect(self.game.player.rect):
             if self.state == GhostState.ENRAGED:
-                if (game.player.state == PlayerState.HURT):
+                if (self.game.player.state == PlayerState.HURT):
                     pass
                     
-                elif (game.player.state == PlayerState.NORMAL):
-                    game.sounds[game.enemydying].play()
-                    game.player.lives -= 1
-                    game.points -= 500
-                    game.player.state = PlayerState.HURT
+                elif (self.game.player.state == PlayerState.NORMAL):
+                    self.game.sounds[self.game.enemydying].play()
+                    self.game.player.lives -= 1
+                    self.game.points -= 500
+                    self.game.player.state = PlayerState.HURT
             if self.state == GhostState.CALM:
                 self.respawn()
-                game.points += 100
+                self.game.points += 100
                 
     def respawn(self):
         # TODO
@@ -180,8 +181,8 @@ class Player(MovingSprite):
               Direction.SOUTH : pygame.image.load('res/images/me_bottom.png'),
               Direction.WEST : pygame.image.load('res/images/me_left.png')}
 
-    def __init__(self, location, direction, *groups):
-        super(Player, self).__init__(self.images[direction], location, direction, 130, *groups)
+    def __init__(self, game, location, direction, *groups):
+        super(Player, self).__init__(game, self.images[direction], location, direction, 130, *groups)
         self.lives = 3
         self.state = PlayerState.NORMAL
         self.timeHurt = 0
@@ -192,7 +193,7 @@ class Player(MovingSprite):
         x2, y2 = self.rect.bottomright
         return ((x1 + x2)/2.0, (y1 + y2)/2.0)
         
-    def update(self, dt, game):
+    def update(self, dt):
         last = self.rect.copy()
 
         # movement commanded by player key presses
@@ -209,10 +210,10 @@ class Player(MovingSprite):
         self.image = self.images[self.currentDirection]
 
         # actual movement + conforming collision
-        self.finalMoveWithConformingCollision(dt, game)
+        self.finalMoveWithConformingCollision(dt)
         
         # set focus to follow player
-        game.tilemap.set_focus(self.rect.x, self.rect.y)
+        self.game.tilemap.set_focus(self.rect.x, self.rect.y)
         
         # invincibility check after being hurt
         if (self.state == PlayerState.HURT):
@@ -222,15 +223,26 @@ class Player(MovingSprite):
                 self.state = PlayerState.NORMAL
         
 
-class Corn(pygame.sprite.Sprite):
+class StaticSprite(pygame.sprite.Sprite):
+    def __init__(self, game, image, location, *groups):
+        super(StaticSprite, self).__init__(*groups)
+        self.game = game
+        self.rect = pygame.rect.Rect(location, self.image.get_size())
+        
+    def onPlayerCollision(self):
+        pass
+    
+    def update(self, dt):
+        if self.rect.colliderect(self.game.player.rect):
+            self.onPlayerCollision()
+
+class Corn(StaticSprite):
     image = pygame.image.load('res/images/corn.png')
 
-    def __init__(self, location, *groups):
-        super(Corn, self).__init__(*groups)
-        self.rect = pygame.rect.Rect(location, self.image.get_size())
+    def __init__(self, game, location, *groups):
+        super(Corn, self).__init__(game, self.image, location, *groups)
 
-    def update(self, dt, game):
-        if self.rect.colliderect(game.player.rect):
-            game.points += 5
-            game.sounds[game.pickup].play()
-            self.kill()
+    def onPlayerCollision(self):
+        self.game.points += 5
+        self.game.sounds[self.game.pickup].play()
+        self.kill()
