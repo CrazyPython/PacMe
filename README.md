@@ -1,11 +1,12 @@
-# PacMe
+PacMe
+=====
 
 
 Pac Me Pac Me!
 
 
-###Credits
-
+Credits
+-------
 
 
 ####PathAndObjects
@@ -28,8 +29,9 @@ The tmx.py also comes from him enabling me to play around with Tiled-created map
 * [pyglet](http://www.pyglet.org/)
 * [KezMenu](https://pypi.python.org/pypi/KezMenu/) (not yet used)
 * tmx-library by Richard Jones ([see above](https://github.com/mcwise/PacMe#richard-jones-talk-at-us-pycon-2012))
-* 
-###Tools and languages
+
+Tools and languages
+-------------------
 
 * I use Python 2.7 and code mainly in Eclipse Py.
 * [Tiled](http://www.mapeditor.org/) - to create the tilemaps
@@ -37,7 +39,8 @@ The tmx.py also comes from him enabling me to play around with Tiled-created map
 * [GIMP](http://www.gimp.org/) - to create custom images
 
 
-###ToDo
+ToDo
+----
 
 - [x] keep a ToDo-List :)
 - [ ] think about structure (this one's huge - I already feel bad for such a hacked code :P)
