@@ -39,7 +39,17 @@ class MovingSprite(pygame.sprite.Sprite):
         self.speed = speed
         self.image = image
         
-    def finalMoveWithConformingCollision(self, dt):
+    def update(self, dt):
+        # movement actions
+        self.planMovement()
+        
+        # execute movement and enforce conforming collision
+        self.finalMovement(dt)
+        
+    def planMovement(self):
+        pass
+    
+    def finalMovement(self, dt):
         lastRect = self.rect.copy()
         
         if self.currentDirection == Direction.WEST:
@@ -73,6 +83,7 @@ class MovingSprite(pygame.sprite.Sprite):
             if 'b' in blockers and lastRect.top >= cell.bottom and newRect.top < cell.bottom:
                 newRect.top = cell.bottom
         
+        # update position
         self.rect = newRect
 
 class GhostState:
@@ -114,6 +125,12 @@ class Ghost(MovingSprite):
         self.color = color
 
     def update(self, dt):
+        super(Ghost, self).update(dt)
+        
+        # check player Collision
+        self.playerCollision()
+                
+    def planMovement(self):
         lastRect = self.rect
         
         # movement AI
@@ -145,32 +162,35 @@ class Ghost(MovingSprite):
                     if random.randint(0,1) == 0:
                         direction = self.currentDirection
                 self.currentDirection = direction
-        # movement AI END
         
-        # update image    
+        # update image
         self.image = self.images[self.color][self.currentDirection]
-        
-        # execute movement and enforce conforming collision
-        self.finalMoveWithConformingCollision(dt)
-        
+    
+    
+    def respawn(self):
+        # TODO
+        pass
+    
+    def playerCollision(self):
         # player collision
         if self.rect.colliderect(self.game.player.rect):
             if self.state == GhostState.ENRAGED:
+                # ghost is aggressive
                 if (self.game.player.state == PlayerState.HURT):
+                    # hurt protection after ghost hit
                     pass
                     
                 elif (self.game.player.state == PlayerState.NORMAL):
+                    # hurt player
                     self.game.sounds[self.game.enemydying].play()
                     self.game.player.lives -= 1
                     self.game.points -= 500
                     self.game.player.state = PlayerState.HURT
+                    
             if self.state == GhostState.CALM:
+                # ghost is fragile
                 self.respawn()
                 self.game.points += 100
-                
-    def respawn(self):
-        # TODO
-        pass
 
 class PlayerState:
     NORMAL, HURT = xrange(2)
@@ -194,10 +214,19 @@ class Player(MovingSprite):
         return ((x1 + x2)/2.0, (y1 + y2)/2.0)
         
     def update(self, dt):
-        last = self.rect.copy()
-
+        super(Player, self).update(dt)
+        
+        # invincibility check after being hurt
+        if (self.state == PlayerState.HURT):
+            self.timeHurt += dt
+            if (self.timeHurt > 3):
+                self.timeHurt = 0
+                self.state = PlayerState.NORMAL
+        
+    def planMovement(self):
         # movement commanded by player key presses
         key = pygame.key.get_pressed()
+        
         if key[pygame.K_LEFT] and not key[pygame.K_RIGHT]:
                 self.currentDirection = Direction.WEST
         if key[pygame.K_RIGHT] and not key[pygame.K_LEFT]:
@@ -207,21 +236,14 @@ class Player(MovingSprite):
         if key[pygame.K_DOWN] and not key[pygame.K_UP]:
             self.currentDirection = Direction.SOUTH
         
+        # update image
         self.image = self.images[self.currentDirection]
-
-        # actual movement + conforming collision
-        self.finalMoveWithConformingCollision(dt)
+        
+    def finalMovement(self, dt):
+        super(Player, self).finalMovement(dt)
         
         # set focus to follow player
         self.game.tilemap.set_focus(self.rect.x, self.rect.y)
-        
-        # invincibility check after being hurt
-        if (self.state == PlayerState.HURT):
-            self.timeHurt += dt
-            if (self.timeHurt > 3):
-                self.timeHurt = 0
-                self.state = PlayerState.NORMAL
-        
 
 class StaticSprite(pygame.sprite.Sprite):
     def __init__(self, game, image, location, *groups):
@@ -230,6 +252,11 @@ class StaticSprite(pygame.sprite.Sprite):
         self.rect = pygame.rect.Rect(location, self.image.get_size())
         
     def onPlayerCollision(self):
+        '''
+        Overwrite this method to define what happens on collision with the player.
+        
+        It will be checked in the update method.
+        '''
         pass
     
     def update(self, dt):
