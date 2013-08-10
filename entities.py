@@ -283,7 +283,7 @@ class PlayerState:
     '''
     A class containing every possible PlayerState
     '''
-    NORMAL, HURT = xrange(2)
+    NORMAL, HURT, FAST = xrange(2)
 
 class Player(MovingSprite):
     '''
@@ -403,6 +403,11 @@ class Item(pygame.sprite.Sprite):
             self.onPlayerCollision(dt)
             
 class Speedup(Item):
+    '''
+    A power up to boost our speed!
+    
+    Inherits from the Item class, as such it registers collisions with PacMe!
+    '''
     # ToDo: create image for Speedup
     image = None
     def __init__(self, game, speedup, duration, location, *groups):
@@ -417,7 +422,7 @@ class Speedup(Item):
         if (not self.applied):
             self.game.player.speed += self.speedup
             self.applied = True
-    
+            
     def update(self, dt):
         Item.update(self, dt)
         
