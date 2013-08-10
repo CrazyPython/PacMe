@@ -383,11 +383,13 @@ class Item(pygame.sprite.Sprite):
         self.game = game
         self.rect = pygame.rect.Rect(location, self.image.get_size())
 
-    def onPlayerCollision(self):
+    def onPlayerCollision(self, dt):
         '''
         Template method to define what happens on collision with the player.
         
         It will be checked in the update method.
+        
+        @param dt: time passed since last call 
         '''
         pass
 
@@ -398,7 +400,34 @@ class Item(pygame.sprite.Sprite):
         @param dt: time passed since last call of this method
         '''
         if self.rect.colliderect(self.game.player.rect):
-            self.onPlayerCollision()
+            self.onPlayerCollision(dt)
+            
+class Speedup(Item):
+    # ToDo: create image for Speedup
+    image = None
+    def __init__(self, game, speedup, duration, location, *groups):
+        super(Speedup, self).__init__(game, self.image, location, *groups)
+        self.speedup = speedup
+        self.duration = duration
+        self.timeApplied = 0
+        self.applied = False
+        
+    def onPlayerCollision(self, dt):
+        Item.onPlayerCollision(self)
+        if (not self.applied):
+            self.game.player.speed += self.speedup
+            self.applied = True
+    
+    def update(self, dt):
+        Item.update(self, dt)
+        
+        if (self.applied):
+            self.timeApplied += dt
+                
+            if (self.timeApplied >= self.duration):
+                self.game.player.speed -= self.speedup
+                self.kill()
+            
 
 class Corn(Item):
     '''
