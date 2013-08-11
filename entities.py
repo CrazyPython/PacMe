@@ -411,6 +411,9 @@ class Speedup(Item):
     # ToDo: create image for Speedup
     image = None
     def __init__(self, game, speedup, duration, location, *groups):
+        '''
+        Initialisation...
+        '''
         super(Speedup, self).__init__(game, self.image, location, *groups)
         self.speedup = speedup
         self.duration = duration
