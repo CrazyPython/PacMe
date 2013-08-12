@@ -206,6 +206,7 @@ class Ghost(MovingSprite):
             self.playerCollision()
         else:
             self.timefreezed  = self.timefreezed + dt
+            #if timefreezed => self.freezedur:
             if timefreezed => 50:
                 self.unfreezed = True
     def planMovement(self):
@@ -440,17 +441,15 @@ class Speedup(Item):
             
 class FreezeGhost(Item):
     image = None
-    def __init__(self, game, speedup, duration, location, *groups):
+    def __init__(self, game,  duration, location, *groups):
         super(Speedup, self).__init__(game, self.image, location, *groups)
-        self.speedup = speedup
         self.duration = duration
-        self.timeApplied = 0
         self.applied = False
-        
     def onPlayerCollision(self, dt):
         Item.onPlayerCollision(self)
         if (not self.applied):
-            #TODO:get random ghost and freexe it
+            #TODO:get random ghost and freeze it
+            ghost.freezedur = self.duration
             self.applied = True
     #update not needed, ghost object auto matically does it#
 class Corn(Item):
