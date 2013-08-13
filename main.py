@@ -7,7 +7,6 @@ import random
 from kezmenu import KezMenu
 
 
-
 class PrintLocation:
     TOP = (10, 20)
     BOTTOM = (10, -20)
@@ -103,8 +102,9 @@ class Game(object):
 
                 
             if (self.player.lives <= 0):
-                self.printOnScreen("Dead", PrintLocation.TOP)
-            
+                self.printOnScreen("Game Over!", PrintLocation.TOP)
+                pygame.delay(2000)
+                return
             # switch screen buffer and actual screen
             pygame.display.flip()
         
