@@ -30,9 +30,9 @@ The tmx.py also comes from him enabling me to play around with Tiled-created map
 * [KezMenu](https://pypi.python.org/pypi/KezMenu/) (not yet used)
 * tmx-library by Richard Jones ([see above](https://github.com/mcwise/PacMe#richard-jones-talk-at-us-pycon-2012))
 
-##People
-
-CrazyPython
+####People
+[CrazyPython](https://github.com/CrazyPython)
+[me](https://github.com/mcwise)
 
 Tools and languages
 -------------------
