@@ -189,7 +189,8 @@ class Ghost(MovingSprite):
         super(Ghost, self).__init__(game, self.images[color][direction], location, direction, 130, *groups)
         self.state = GhostState.ENRAGED
         self.color = color
-
+        self.unfreezed = True
+        self.timefreezed = 0
     def update(self, dt):
         '''
         Calling the update-method of MovingSprite and adding a method
@@ -198,11 +199,16 @@ class Ghost(MovingSprite):
         @param dt: time passed in seconds since the last call of this method
         @see MovingSprite
         '''
-        super(Ghost, self).update(dt)
-
-        # check player Collision
-        self.playerCollision()
-
+        if self.unfreezed:
+            super(Ghost, self).update(dt)
+    
+            # check player Collision
+            self.playerCollision()
+        else:
+            self.timefreezed  = self.timefreezed + dt
+            #if timefreezed => self.freezedur:
+            if timefreezed => 50:
+                self.unfreezed = True
     def planMovement(self):
         '''
         A template method used in combination with update()
@@ -348,7 +354,7 @@ class Player(MovingSprite):
         key = pygame.key.get_pressed()
 
         if key[pygame.K_LEFT] and not key[pygame.K_RIGHT]:
-                self.currentDirection = Direction.WEST
+            self.currentDirection = Direction.WEST
         if key[pygame.K_RIGHT] and not key[pygame.K_LEFT]:
             self.currentDirection = Direction.EAST
         if key[pygame.K_UP] and not key[pygame.K_DOWN]:
@@ -436,7 +442,19 @@ class Speedup(Item):
                 self.game.player.speed -= self.speedup
                 self.kill()
             
-
+class FreezeGhost(Item):
+    image = None
+    def __init__(self, game,  duration, location, *groups):
+        super(Speedup, self).__init__(game, self.image, location, *groups)
+        self.duration = duration
+        self.applied = False
+    def onPlayerCollision(self, dt):
+        Item.onPlayerCollision(self)
+        if (not self.applied):
+            #TODO:get random ghost and freeze it
+            ghost.freezedur = self.duration
+            self.applied = True
+    #update not needed, ghost object auto matically does it#
 class Corn(Item):
     '''
     Basic item, grants points on picking it up and vanishes.
