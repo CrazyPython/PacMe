@@ -283,7 +283,7 @@ class PlayerState:
     '''
     A class containing every possible PlayerState
     '''
-    NORMAL, HURT, FAST = xrange(2)
+    NORMAL, HURT, FAST = xrange(3)
 
 class Player(MovingSprite):
     '''
@@ -449,7 +449,7 @@ class Corn(Item):
         '''
         super(Corn, self).__init__(game, self.image, location, *groups)
 
-    def onPlayerCollision(self):
+    def onPlayerCollision(self, dt):
         '''
         Template method.
         

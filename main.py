@@ -103,7 +103,7 @@ class Game(object):
                 
             if (self.player.lives <= 0):
                 self.printOnScreen("Game Over!", PrintLocation.TOP)
-                pygame.delay(2000)
+                pygame.time.delay(2000)
                 return
             # switch screen buffer and actual screen
             pygame.display.flip()
