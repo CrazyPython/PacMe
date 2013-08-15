@@ -191,6 +191,7 @@ class Ghost(MovingSprite):
         self.color = color
         self.unfreezed = True
         self.timefreezed = 0
+        self.freezedur = 0
     def update(self, dt):
         '''
         Calling the update-method of MovingSprite and adding a method
@@ -207,8 +208,10 @@ class Ghost(MovingSprite):
         else:
             self.timefreezed  = self.timefreezed + dt
             #if timefreezed => self.freezedur:
-            if timefreezed => 50:
+            
+            if self.timefreezed >= self.freezedur:
                 self.unfreezed = True
+                self.freezedur = 0
     def planMovement(self):
         '''
         A template method used in combination with update()
@@ -445,7 +448,7 @@ class Speedup(Item):
 class FreezeGhost(Item):
     image = None
     def __init__(self, game,  duration, location, *groups):
-        super(Speedup, self).__init__(game, self.image, location, *groups)
+        super(FreezeGhost, self).__init__(game, self.image, location, *groups)
         self.duration = duration
         self.applied = False
     def onPlayerCollision(self, dt):

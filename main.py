@@ -85,7 +85,7 @@ class Game(object):
                     return
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_c:
                     self.player.rect = pygame.rect.Rect((32, 40), (16, 16))
-                    self.player.currentDirection = entities.Direction.RIGHT
+                    self.player.currentDirection = entities.Direction.EAST
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
                     info = not info
 
